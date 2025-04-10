@@ -110,7 +110,8 @@ void Character::checkCollisions()
             }
         }
     }
-}
-    if(!landed)
-        onGround = false;
 
+    if(!landed){
+        onGround = false;
+    }
+}
