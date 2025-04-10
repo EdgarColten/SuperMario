@@ -34,6 +34,10 @@ void MainWindow::createLevel()
     itemBlock->show();
     blocks.append(itemBlock);
 
+    Mushroom *mushroom = new Mushroom(":/images/mushroom.png",this);
+    mushroom->move(200, 340);
+    mushroom->show();
+    mushrooms.append(mushroom);
 
     Block *groundBlock = new Block(":/images/block1.png", this);
     groundBlock->move( 55 + 20, 300);

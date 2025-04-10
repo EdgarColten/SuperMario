@@ -18,6 +18,8 @@ public:
 private:
     void createLevel();
     QList<Block*> blocks; // All blocks that form the level
+    QList<Mushroom*> mushrooms; // All blocks that form the level
+
     Character *mario;
 };
 

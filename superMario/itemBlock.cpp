@@ -20,8 +20,9 @@ void ItemBlock::hit()
     QLabel *itemLabel = new QLabel(parentWidget());
     QPixmap pix(itemImagePath);
     itemLabel->setPixmap(pix.scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    itemLabel->setFixedSize(30, 30);
-
+    itemLabel->setFixedSize(30, 30);\
+}
+/*
     // Position the item at the center of the block (starting at the block's top edge)
     int startX = x() + (width() - itemLabel->width()) / 2;
     int startY = y() - itemLabel->height(); // final position above the block
@@ -36,9 +37,9 @@ void ItemBlock::hit()
     anim->setEasingCurve(QEasingCurve::OutBounce);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
-
+*/
 void ItemBlock::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
-    hit(); // Simulate a hit when the user clicks on the block
+    mushroomHit(); // Simulate a hit when the user clicks on the block
 }

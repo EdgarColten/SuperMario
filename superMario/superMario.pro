@@ -13,13 +13,15 @@ SOURCES += \
     character.cpp \
     itemBlock.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mushroom.cpp
 
 HEADERS += \
     block.h \
     character.h \
     itemBlock.h \
-    mainwindow.h
+    mainwindow.h \
+    mushroom.h
 
 FORMS += \
     mainwindow.ui

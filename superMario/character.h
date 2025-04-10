@@ -5,8 +5,9 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QList>
-#include "Block.h"
-#include "ItemBlock.h"
+#include "block.h"
+#include "itemBlock.h"
+#include "mushroom.h"
 
 class Character : public QLabel
 {
@@ -15,6 +16,7 @@ public:
     explicit Character(QWidget *parent = nullptr);
     void setBlocks(const QList<Block*> &blocks);
 
+    void setMushrooms(const QList<Mushroom *> &mushrooms);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
@@ -23,6 +25,8 @@ private slots:
 
 private:
     QList<Block*> blockList;
+    QList<Mushroom*> mushroomList;
+
     int verticalVelocity;   // Vertical movement (positive = falling)
     int horizontalSpeed;    // Horizontal step size
     bool onGround;          // Whether Mario is standing on a block

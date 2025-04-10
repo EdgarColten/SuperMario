@@ -19,6 +19,13 @@ Character::Character(QWidget *parent) : QLabel(parent),
 void Character::setBlocks(const QList<Block*> &blocks)
 {
     blockList = blocks;
+
+}
+
+void Character::setMushrooms(const QList<Mushroom*> &mushrooms)
+{
+    mushroomList = mushrooms;
+
 }
 
 void Character::keyPressEvent(QKeyEvent *event)
@@ -67,40 +74,43 @@ void Character::checkCollisions()
     bool landed = false;
 
     // Loop over all blocks in the level
-    for(Block* block : blockList)
+    for(mushroomRect* mushroom : mushroomList)
     {
-        QRect blockRect = block->geometry();
+        QRect mushroomRect = mushroom->geometry();
 
         // Check landing: if Mario's bottom is coming down onto a block
         // We use a tolerance (5 pixels) to decide if he is landing.
-        if(charRect.intersects(blockRect))
+        if(charRect.intersects(mushroomRect))
         {
             // If falling and Mario's bottom was just above the block, he lands.
-            if(verticalVelocity >= 0 && (charRect.bottom() - verticalVelocity) <= blockRect.top() &&
-                charRect.bottom() >= blockRect.top() &&
-                charRect.right() > blockRect.left() && charRect.left() < blockRect.right())
+            if(verticalVelocity >= 0 && (charRect.bottom() - verticalVelocity) <= mushroomRect.top() &&
+                charRect.bottom() >= mushroomRect.top() &&
+                charRect.right() > mushroomRect.left() && charRect.left() < mushroomRect.right())
             {
-                move(x(), blockRect.top() - height());
+                move(x(), mushroomRect.top() - height());
                 verticalVelocity = 0;
                 landed = true;
                 onGround = true;
             }
             // Check head collision (jumping upward into a block)
-            else if(verticalVelocity < 0 && (charRect.top() - verticalVelocity) >= blockRect.bottom() &&
-                     charRect.top() <= blockRect.bottom() &&
-                     charRect.right() > blockRect.left() && charRect.left() < blockRect.right())
+            else if(verticalVelocity < 0 && (charRect.top() - verticalVelocity) >= mushroomRect.bottom() &&
+                     charRect.top() <= mushroomRect.bottom() &&
+                     charRect.right() > mushroomRect.left() && charRect.left() < mushroomRect.right())
             {
                 // If block is an ItemBlock, trigger its hit
-                ItemBlock *ib = qobject_cast<ItemBlock*>(block);
-                if(ib)
+                Mushroom *pu = qobject_cast<Mushroom*>(mushroom);
+
+         //       Mushroom * = qobject_cast<ItemBlock*>(block);
+                if(pu)
                 {
-                    ib->hit();
+                    pu->mushroomHit();
                 }
                 // Reverse upward momentum so Mario starts falling
                 verticalVelocity = 1;
             }
         }
     }
+}
     if(!landed)
         onGround = false;
-}
+

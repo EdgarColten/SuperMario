@@ -2,6 +2,8 @@
 #define ITEMBLOCK_H
 
 #include "Block.h"
+#include "mushroom.h"
+
 #include <QPropertyAnimation>
 
 class ItemBlock : public Block
