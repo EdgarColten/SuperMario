@@ -11,14 +11,18 @@ CONFIG += c++17
 SOURCES += \
     block.cpp \
     character.cpp \
+    goomba.cpp \
     itemBlock.cpp \
+    koopa.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     block.h \
     character.h \
+    goomba.h \
     itemBlock.h \
+    koopa.h \
     mainwindow.h
 
 FORMS += \

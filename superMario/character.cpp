@@ -101,6 +101,72 @@ void Character::checkCollisions()
             }
         }
     }
+
+    for (int i = 0; i < goombaList.size(); ++i) {
+        Goomba* g = goombaList[i];
+
+        // Check if it's already stomped
+        if (g->isStomped()) {
+            goombaList.removeAt(i);  // remove from list
+            continue; // don't increment i, list is now shorter
+        }
+
+        if (marioBottomTouchesGoombaTop(g)) {
+            g->stomp();
+            verticalVelocity = -10; // bounce Mario up
+            goombaList.removeAt(i); // remove after stomp
+            continue;
+        }
+    }
+
+    for (int i = 0; i < koopaList.size(); ++i) {
+        Koopa* k = koopaList[i];
+
+        // Check if it's already stomped
+        if (k->isStomped()) {
+            continue;
+        }
+
+        // Mario stomps on Koopa
+        if (marioBottomTouchesKoopaTop(k)) {
+            k->stomp();
+            verticalVelocity = -10;
+            continue;
+        }
+    }
     if(!landed)
         onGround = false;
 }
+
+void Character::setGoombas(const QList<Goomba*>& gList) {
+    goombaList = gList;
+}
+
+void Character::setKoopas(const QList<Koopa*>& kList) {
+    koopaList = kList;
+}
+
+bool Character::marioBottomTouchesGoombaTop(Goomba *g)
+{
+    QRect marioRect = this->geometry();
+    QRect goombaRect = g->geometry();
+
+    return verticalVelocity > 0 &&
+           marioRect.bottom() >= goombaRect.top() - 5 &&
+           marioRect.bottom() <= goombaRect.top() + 10 &&
+           marioRect.right() > goombaRect.left() &&
+           marioRect.left() < goombaRect.right();
+}
+
+bool Character::marioBottomTouchesKoopaTop(Koopa *k)
+{
+    QRect marioRect = this->geometry();
+    QRect koopaRect = k->geometry();
+
+    return verticalVelocity > 0 &&
+           marioRect.bottom() >= koopaRect.top() - 5 &&
+           marioRect.bottom() <= koopaRect.top() + 10 &&
+           marioRect.right() > koopaRect.left() &&
+           marioRect.left() < koopaRect.right();
+}
+

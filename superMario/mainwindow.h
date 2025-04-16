@@ -6,6 +6,8 @@
 #include "Block.h"
 #include "ItemBlock.h"
 #include "Character.h"
+#include "Koopa.h"
+#include "Goomba.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +20,8 @@ public:
 private:
     void createLevel();
     QList<Block*> blocks; // All blocks that form the level
+    QList<Goomba*> goombas;
+    QList<Koopa*> koopas;
     Character *mario;
 };
 

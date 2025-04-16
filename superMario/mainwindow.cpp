@@ -10,7 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     mario = new Character(this);
     mario->move(100, 0);
     mario->setBlocks(blocks);
+    mario->setGoombas(goombas);
+    mario->setKoopas(koopas);
     mario->show();
+
 }
 
 MainWindow::~MainWindow()
@@ -39,4 +42,14 @@ void MainWindow::createLevel()
     groundBlock->move( 55 + 20, 300);
     groundBlock->show();
     blocks.append(groundBlock);
+
+    Koopa *koopa = new Koopa(":/images/Anikoopa.gif", this);
+    koopa->move(450, 438);
+    koopa->show();
+    koopas.append(koopa);
+
+    Goomba *goomba = new Goomba(":/images/Anigoomba.gif", this);
+    goomba->move(370, 445);
+    goomba->show();
+    goombas.append(goomba);
 }

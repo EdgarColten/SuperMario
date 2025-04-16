@@ -7,5 +7,9 @@
         <file>mushroom.png</file>
         <file>question_block.png</file>
         <file>mario.png</file>
+        <file>Anigoomba.gif</file>
+        <file>Anikoopa.gif</file>
+        <file>stompedGoomba.png</file>
+        <file>stompedKoopa.png</file>
     </qresource>
 </RCC>

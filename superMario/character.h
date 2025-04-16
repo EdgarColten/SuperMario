@@ -5,8 +5,12 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QList>
+#include <QGraphicsItem>
+#include <QRandomGenerator>
 #include "Block.h"
 #include "ItemBlock.h"
+#include "goomba.h"
+#include "koopa.h"
 
 class Character : public QLabel
 {
@@ -14,6 +18,8 @@ class Character : public QLabel
 public:
     explicit Character(QWidget *parent = nullptr);
     void setBlocks(const QList<Block*> &blocks);
+    void setGoombas(const QList<Goomba*>& gList);
+    void setKoopas(const QList<Koopa*>& kList);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -27,8 +33,12 @@ private:
     int horizontalSpeed;    // Horizontal step size
     bool onGround;          // Whether Mario is standing on a block
     QTimer *movementTimer;  // Timer for updating movement (gravity & collisions)
+    QList<Goomba*> goombaList;
+    QList<Koopa*> koopaList;
     void applyGravity();
     void checkCollisions();
+    bool marioBottomTouchesGoombaTop(Goomba *g);
+    bool marioBottomTouchesKoopaTop(Koopa *k);
 };
 
 #endif // CHARACTER_H
