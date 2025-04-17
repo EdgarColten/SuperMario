@@ -35,7 +35,14 @@ void ItemBlock::hit()
     anim->setEndValue(QPoint(startX, startY));
     anim->setEasingCurve(QEasingCurve::OutBounce);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
+
+    // Remove the item after animation is done
+    connect(anim, &QPropertyAnimation::finished, itemLabel, &QLabel::deleteLater);
+
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
+
+
 
 void ItemBlock::mousePressEvent(QMouseEvent *event)
 {
