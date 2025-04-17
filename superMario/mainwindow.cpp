@@ -21,9 +21,9 @@ void MainWindow::createLevel()
 {
 
     // Platform 2: a row of blocks at y = 500 (ground level)
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 30; ++i) {
         Block *groundBlock = new Block(":/images/block.png", this);
-        groundBlock->move(i * 55 + 20, 500);
+        groundBlock->move(i * 55 + 20 + (i *5), 500);
         groundBlock->show();
         blocks.append(groundBlock);
     }

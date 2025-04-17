@@ -1,19 +1,20 @@
 #include "Character.h"
 #include <QPixmap>
 #include <QDebug>
+#include <QKeyEvent>
 
-Character::Character(QWidget *parent) : QLabel(parent),
-    verticalVelocity(0), horizontalSpeed(10), onGround(false)
+Character::Character(QWidget *parent)
+    : QLabel(parent), verticalVelocity(0), horizontalSpeed(10), onGround(false)
 {
     // Set Mario's image (adjust path/size as needed)
-    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setPixmap(QPixmap(":/images/mario.png")
+                  .scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setFixedSize(40, 40);
     setFocusPolicy(Qt::StrongFocus);
 
-    // Timer to update gravity and check collisions (~50 FPS)
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
-    movementTimer->start(20);
+    movementTimer->start(30);
 }
 
 void Character::setBlocks(const QList<Block*> &blocks)
@@ -23,84 +24,84 @@ void Character::setBlocks(const QList<Block*> &blocks)
 
 void Character::keyPressEvent(QKeyEvent *event)
 {
-    int newX = x();
-    int newY = y();
+    keysPressed.insert(event->key());
+    // Jump if on ground
+    if (event->key() == Qt::Key_Space && onGround)
+    {
+        verticalVelocity = -20; // Jump impulse
+        onGround = false;
+    }
+}
 
-    if(event->key() == Qt::Key_Left)
-    {
-        newX -= horizontalSpeed;
-    }
-    else if(event->key() == Qt::Key_Right)
-    {
-        newX += horizontalSpeed;
-    }
-    else if(event->key() == Qt::Key_Space)
-    {
-        // Jump only if on a block (platform)
-        if(onGround)
-        {
-            verticalVelocity = -20; // Jump impulse (negative moves up)
-            onGround = false;
-        }
-    }
-    move(newX, newY);
+void Character::keyReleaseEvent(QKeyEvent *event)
+{
+    keysPressed.remove(event->key());
 }
 
 void Character::updateMovement()
 {
-    applyGravity();
-    checkCollisions();
-}
+    // ----- HORIZONTAL MOVEMENT -----
+    int dx = 0;
+    if (keysPressed.contains(Qt::Key_Left))
+        dx -= horizontalSpeed;
+    if (keysPressed.contains(Qt::Key_Right))
+        dx += horizontalSpeed;
 
-void Character::applyGravity()
-{
-    // Apply gravity: accelerate downward
-    verticalVelocity += 1;  // gravity acceleration
-    int newY = y() + verticalVelocity;
-    move(x(), newY);
-}
-
-void Character::checkCollisions()
-{
-    // Create a rectangle representing Mario's current area
-    QRect charRect = geometry();
-    bool landed = false;
-
-    // Loop over all blocks in the level
-    for(Block* block : blockList)
+    // Move horizontally and immediately check for horizontal collisions.
+    int newX = x() + dx;
+    move(newX, y());
+    for (Block* block : blockList)
     {
-        QRect blockRect = block->geometry();
-
-        // Check landing: if Mario's bottom is coming down onto a block
-        // We use a tolerance (5 pixels) to decide if he is landing.
-        if(charRect.intersects(blockRect))
+        if (geometry().intersects(block->geometry()))
         {
-            // If falling and Mario's bottom was just above the block, he lands.
-            if(verticalVelocity >= 0 && (charRect.bottom() - verticalVelocity) <= blockRect.top() &&
-                charRect.bottom() >= blockRect.top() &&
-                charRect.right() > blockRect.left() && charRect.left() < blockRect.right())
+            // If moving right, snap to the left edge of the block.
+            if (dx > 0)
             {
-                move(x(), blockRect.top() - height());
-                verticalVelocity = 0;
-                landed = true;
-                onGround = true;
+                move(block->x() - width(), y());
             }
-            // Check head collision (jumping upward into a block)
-            else if(verticalVelocity < 0 && (charRect.top() - verticalVelocity) >= blockRect.bottom() &&
-                     charRect.top() <= blockRect.bottom() &&
-                     charRect.right() > blockRect.left() && charRect.left() < blockRect.right())
+            // If moving left, snap to the right edge of the block.
+            else if (dx < 0)
             {
-                // If block is an ItemBlock, trigger its hit
-                ItemBlock *ib = qobject_cast<ItemBlock*>(block);
-                if(ib)
-                {
-                    ib->hit();
-                }
-                // Reverse upward momentum so Mario starts falling
-                verticalVelocity = 1;
+                move(block->x() + block->width(), y());
             }
         }
     }
-    if(!landed)
+
+    // ----- VERTICAL MOVEMENT -----
+    // Record Y before applying gravity.
+    int oldY = y();
+    verticalVelocity += 1;  // Apply gravity (or reduce upward velocity)
+    int newY = y() + verticalVelocity;
+    move(x(), newY);
+
+    // Check for vertical collisions without affecting X.
+    for (Block* block : blockList)
+    {
+        if (geometry().intersects(block->geometry()))
+        {
+            // If falling: land on the block's top.
+            if (verticalVelocity > 0 && (oldY + height() <= block->y()))
+            {
+                move(x(), block->y() - height());
+                verticalVelocity = 0;
+                onGround = true;
+            }
+            // If jumping upward: head bump.
+            else if (verticalVelocity < 0 && (oldY >= block->y() + block->height()))
+            {
+                // Place Mario so his top is exactly at the block's bottom.
+                move(x(), block->y() + block->height());
+                verticalVelocity = 0;  // Stop upward movement
+
+                // Trigger the block hit if it's an item block.
+                ItemBlock *ib = qobject_cast<ItemBlock*>(block);
+                if (ib)
+                    ib->hit();
+            }
+        }
+    }
+
+    // If vertical velocity remains non-zero, Mario is in the air.
+    if (verticalVelocity != 0)
         onGround = false;
 }

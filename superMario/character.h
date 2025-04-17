@@ -2,33 +2,44 @@
 #define CHARACTER_H
 
 #include <QLabel>
-#include <QKeyEvent>
 #include <QTimer>
-#include <QList>
+#include <QKeyEvent>
+#include <QSet>
+
 #include "Block.h"
 #include "ItemBlock.h"
 
 class Character : public QLabel
 {
     Q_OBJECT
+
 public:
     explicit Character(QWidget *parent = nullptr);
     void setBlocks(const QList<Block*> &blocks);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override; // 👈 ADD THIS!
 
 private slots:
     void updateMovement();
 
 private:
-    QList<Block*> blockList;
-    int verticalVelocity;   // Vertical movement (positive = falling)
-    int horizontalSpeed;    // Horizontal step size
-    bool onGround;          // Whether Mario is standing on a block
-    QTimer *movementTimer;  // Timer for updating movement (gravity & collisions)
     void applyGravity();
     void checkCollisions();
+
+    void checkHorizontalCollisions();
+    void checkVerticalCollisions();
+
+
+    QTimer *movementTimer;
+    int verticalVelocity;
+    int horizontalSpeed;
+    bool onGround;
+
+    QList<Block*> blockList;
+
+    QSet<int> keysPressed; // 👈 ADD THIS!
 };
 
 #endif // CHARACTER_H
