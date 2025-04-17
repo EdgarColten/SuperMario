@@ -11,6 +11,7 @@
 #include "ItemBlock.h"
 #include "goomba.h"
 #include "koopa.h"
+#include "pipe.h"
 
 class Character : public QLabel
 {
@@ -20,6 +21,7 @@ public:
     void setBlocks(const QList<Block*> &blocks);
     void setGoombas(const QList<Goomba*>& gList);
     void setKoopas(const QList<Koopa*>& kList);
+    void setPipes(const QList<Pipe*>& pList);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -35,6 +37,7 @@ private:
     QTimer *movementTimer;  // Timer for updating movement (gravity & collisions)
     QList<Goomba*> goombaList;
     QList<Koopa*> koopaList;
+    QList<Pipe*> pipeList;
     void applyGravity();
     void checkCollisions();
     bool marioBottomTouchesGoombaTop(Goomba *g);

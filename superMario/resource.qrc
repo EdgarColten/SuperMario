@@ -11,5 +11,6 @@
         <file>Anikoopa.gif</file>
         <file>stompedGoomba.png</file>
         <file>stompedKoopa.png</file>
+        <file>mediumPipe.png</file>
     </qresource>
 </RCC>

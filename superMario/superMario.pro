@@ -15,7 +15,8 @@ SOURCES += \
     itemBlock.cpp \
     koopa.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    pipe.cpp
 
 HEADERS += \
     block.h \
@@ -23,7 +24,8 @@ HEADERS += \
     goomba.h \
     itemBlock.h \
     koopa.h \
-    mainwindow.h
+    mainwindow.h \
+    pipe.h
 
 FORMS += \
     mainwindow.ui

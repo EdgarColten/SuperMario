@@ -8,6 +8,7 @@
 #include "Character.h"
 #include "Koopa.h"
 #include "Goomba.h"
+#include "Pipe.h"
 
 class MainWindow : public QMainWindow
 {
@@ -22,6 +23,7 @@ private:
     QList<Block*> blocks; // All blocks that form the level
     QList<Goomba*> goombas;
     QList<Koopa*> koopas;
+    QList<Pipe*> pipes;
     Character *mario;
 };
 

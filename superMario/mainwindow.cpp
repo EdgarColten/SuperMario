@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     mario->setBlocks(blocks);
     mario->setGoombas(goombas);
     mario->setKoopas(koopas);
+    mario->setPipes(pipes);
     mario->show();
 
 }
@@ -22,7 +23,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::createLevel()
 {
-
     // Platform 2: a row of blocks at y = 500 (ground level)
     for (int i = 0; i < 10; ++i) {
         Block *groundBlock = new Block(":/images/block.png", this);
@@ -36,7 +36,6 @@ void MainWindow::createLevel()
     itemBlock->move(200, 340);
     itemBlock->show();
     blocks.append(itemBlock);
-
 
     Block *groundBlock = new Block(":/images/block1.png", this);
     groundBlock->move( 55 + 20, 300);
@@ -52,4 +51,9 @@ void MainWindow::createLevel()
     goomba->move(370, 445);
     goomba->show();
     goombas.append(goomba);
+
+    Pipe *pipe = new Pipe(":/images/mediumPipe.png", this);
+    pipe->move(300, 400);
+    pipe->show();
+    pipes.append(pipe);
 }

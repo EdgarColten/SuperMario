@@ -146,6 +146,10 @@ void Character::setKoopas(const QList<Koopa*>& kList) {
     koopaList = kList;
 }
 
+void Character::setPipes(const QList<Pipe*>& pList) {
+    pipeList = pList;
+}
+
 bool Character::marioBottomTouchesGoombaTop(Goomba *g)
 {
     QRect marioRect = this->geometry();
