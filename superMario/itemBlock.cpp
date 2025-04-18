@@ -1,4 +1,4 @@
-#include "ItemBlock.h"
+#include "itemBlock.h"
 #include <QLabel>
 #include <QPropertyAnimation>
 #include <QEasingCurve>
