@@ -63,6 +63,11 @@ void Character::applyGravity()
 void Character::checkCollisions()
 {
     // Create a rectangle representing Mario's current area
+    Koopa *koopa;
+    Goomba *goomba;
+    Pipe *pipe;
+    QRect goombaRect = goomba->geometry();
+    QRect pipeRect = pipe->geometry();
     QRect charRect = geometry();
     bool landed = false;
 
@@ -102,20 +107,57 @@ void Character::checkCollisions()
         }
     }
 
-    for (int i = 0; i < goombaList.size(); ++i) {
-        Goomba* g = goombaList[i];
+    /*for(Pipe* pipe : pipeList)
+    {
+        QRect pipeRect = pipe->geometry();
 
-        // Check if it's already stomped
-        if (g->isStomped()) {
-            goombaList.removeAt(i);  // remove from list
-            continue; // don't increment i, list is now shorter
+        // Check landing: if Mario's bottom is coming down onto a pipe
+        // We use a tolerance (5 pixels) to decide if he is landing.
+        if(charRect.intersects(pipeRect))
+        {
+            // If falling and Mario's bottom was just above the block, he lands.
+            if(verticalVelocity >= 0 && (charRect.bottom() - verticalVelocity) <= pipeRect.top() &&
+                charRect.bottom() >= pipeRect.top() &&
+                charRect.right() > pipeRect.left() && charRect.left() < pipeRect.right())
+            {
+                move(x(), pipeRect.top() - height());
+                verticalVelocity = 0;
+                landed = true;
+                onGround = true;
+            }
+            // Check head collision (jumping upward into a block)
+            else if(verticalVelocity < 0 && (charRect.top() - verticalVelocity) >= pipeRect.bottom() &&
+                     charRect.top() <= pipeRect.bottom() &&
+                     charRect.right() > pipeRect.left() && charRect.left() < pipeRect.right())
+            {
+                // Reverse upward momentum so Mario starts falling
+                verticalVelocity = 1;
+            }
         }
+    }*/
 
-        if (marioBottomTouchesGoombaTop(g)) {
-            g->stomp();
-            verticalVelocity = -10; // bounce Mario up
-            goombaList.removeAt(i); // remove after stomp
-            continue;
+    for (Pipe* pipe : pipeList)
+    {
+        if (goombaRect.intersects(pipeRect))
+        {
+            if (goomba->direction > 0 &&
+                goombaRect.right() > pipeRect.left() &&
+                goombaRect.left() < pipeRect.left() &&
+                goombaRect.bottom() > pipeRect.top() &&
+                goombaRect.top() < pipeRect.bottom())
+            {
+                goomba->direction = -1;
+                goomba->move(pipeRect.left() - goombaRect.width(), goomba->y());
+            }
+            else if (goomba->direction < 0 &&
+                goombaRect.left() < pipeRect.right() &&
+                goombaRect.right() > pipeRect.right() &&
+                goombaRect.bottom() > pipeRect.top() &&
+                goombaRect.top() < pipeRect.bottom())
+            {
+                goomba->direction = 1;
+                goomba->move(pipeRect.right(), goomba->y());
+            }
         }
     }
 

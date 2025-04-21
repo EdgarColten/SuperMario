@@ -12,6 +12,7 @@
 #include "goomba.h"
 #include "koopa.h"
 #include "pipe.h"
+using namespace std;
 
 class Character : public QLabel
 {

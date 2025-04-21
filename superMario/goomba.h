@@ -13,9 +13,10 @@ class Goomba : public QLabel
     Q_OBJECT
 public:
     explicit Goomba(const QString &goombaImagePath, QWidget *parent = nullptr);
-    void moveLeft();
+    void moveGoomba();
     void stomp();
     bool isStomped() const;
+    int direction = -1; // -1 for left and 1 for right
 
 private:
     QLabel *label;
