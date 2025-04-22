@@ -3,7 +3,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setFixedSize(800, 600);
+/*    setFixedSize(800, 600);
     createLevel();
 
     // Create Mario; start him high so he falls onto a block
@@ -19,10 +19,53 @@ MainWindow::MainWindow(QWidget *parent)
     mario->setCastle(castle);
 
     mario->show();
+*/
+    MainMenu *menu = new MainMenu(this);
+    connect(menu, &MainMenu::startGame, this, [=]() {
+        menu->close();
+        startGame();
+    });
+    menu->exec();
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::showMainMenu()
+{
+    if (mario) {
+            mario->hide();
+            delete mario;
+            mario = nullptr;
+        }
+
+        qDeleteAll(blocks);
+        blocks.clear();
+        qDeleteAll(mushrooms);
+        mushrooms.clear();
+        qDeleteAll(goombas);
+        goombas.clear();
+        qDeleteAll(koopas);
+        koopas.clear();
+        qDeleteAll(pipes);
+        pipes.clear();
+        qDeleteAll(flag);
+        flag.clear();
+
+        if (castle) {
+            castle->hide();
+            delete castle;
+            castle = nullptr;
+        }
+
+        // Show menu again
+        MainMenu *menu = new MainMenu(this);
+        connect(menu, &MainMenu::startGame, this, [=]() {
+            menu->close();
+            startGame();
+        });
+        menu->exec();
 }
 
 void MainWindow::createLevel()
@@ -69,7 +112,7 @@ void MainWindow::createLevel()
 //    int playerLives = 3;
     QString currentLevelName = "1-2";
     connect(flagBlock, &Flag::levelCompleted, this, [this, flagBlock, currentLevelName]() { mario->freeze();flagBlock->levelCompletedHandler(currentLevelName);});
-    connect(flagBlock, &Flag::transitionToNextLevel, this, &MainWindow::startNextLevel);
+    connect(flagBlock, &Flag::backToMainMenu, this, &MainWindow::showMainMenu);
 
     castle = new QLabel(this);
     QPixmap castlePix(":/images/castle.png");
@@ -79,6 +122,24 @@ void MainWindow::createLevel()
     castle->lower();
     castle->show();
 
+}
+
+void MainWindow::startGame()
+{
+    setFixedSize(800, 600);
+    createLevel();
+    mario = new Character(this);
+    mario->move(100, 0);
+
+    mario->setBlocks(blocks);
+    mario->setMush(mushrooms);
+    mario->setGoombas(goombas);
+    mario->setKoopas(koopas);
+    mario->setPipes(pipes);
+    mario->setFlag(flag);
+    mario->setCastle(castle);
+
+    mario->show();
 }
 
 void MainWindow::startNextLevel()

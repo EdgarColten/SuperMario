@@ -44,7 +44,7 @@ void Flag::levelCompletedHandler(const QString &levelName)
                 overlay->deleteLater();
                 overlay = nullptr;
             }
-            emit transitionToNextLevel();
+            emit backToMainMenu();
         });
     }
 

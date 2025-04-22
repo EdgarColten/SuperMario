@@ -12,6 +12,7 @@
 #include "goomba.h"
 #include "pipe.h"
 #include "flag.h"
+#include "mainMenu.h"
 
 
 class MainWindow : public QMainWindow
@@ -22,12 +23,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     QLabel *castle;
+    void showMainMenu();
 
 public slots:
     void startNextLevel();
 
 private:
     void createLevel();
+    void startGame();
 
     QList<Block*> blocks; // All blocks that form the level
     QList<Mushroom*> mushrooms; // All blocks that form the level

@@ -16,5 +16,11 @@
         <file>flag.png</file>
         <file>marioWalking.gif</file>
         <file>marioOG.png</file>
+        <file>titleBG1.png</file>
+        <file>marioLogo.png</file>
+        <file>exitBut.jpg</file>
+        <file>exitBut1.jpg</file>
+        <file>startBut.png</file>
+        <file>startBut1.jpg</file>
     </qresource>
 </RCC>

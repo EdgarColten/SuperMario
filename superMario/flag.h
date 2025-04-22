@@ -15,6 +15,8 @@ public:
 signals:
     void levelCompleted();
     void transitionToNextLevel();
+    void backToMainMenu();
+
 public slots:
     void levelCompletedHandler(const QString &levelName);
 private:
