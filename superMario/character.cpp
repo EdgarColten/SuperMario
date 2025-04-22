@@ -94,8 +94,32 @@ void Character::updateMovement()
         dx += horizontalSpeed;
 
     // Move horizontally and immediately check for horizontal collisions.
-    int newX = x() + dx;
-    move(newX, y());
+//    int newX = x() + dx; Old movement Code(Return if new doesnt work)
+//    move(newX, y());
+
+    int newX = x();
+    const int halfway = 400;
+
+    if (dx > 0 && x() >= halfway){
+        for (Block *block : blockList)
+            block->move(block->x() - dx, block->y());
+        for (Mushroom *mushroom : mushroomList)
+            mushroom->move(mushroom->x() - dx, mushroom->y());
+        for (Goomba *goomba : goombaList)
+            goomba->move(goomba->x() - dx, goomba->y());
+        for (Koopa *koopa : koopaList)
+            koopa->move(koopa->x() - dx, koopa->y());
+        for (Pipe *pipe : pipeList)
+            pipe->move(pipe->x() - dx, pipe->y());
+        for (Flag *flag : flagList)
+            flag->move(flag->x() - dx, flag->y());
+    }
+    else if( dx < 0 && x() <= 0){}
+
+    else {
+        move(newX+dx,y());
+    }
+
     for (Block* block : blockList)
     {
         if (geometry().intersects(block->geometry()))

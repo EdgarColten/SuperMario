@@ -62,7 +62,7 @@ void MainWindow::createLevel()
     pipes.append(pipe);
 
     Flag *flagBlock = new Flag(":/images/flag.png", this);
-    flagBlock->move(400, 110);
+    flagBlock->move(800, 110);
     flagBlock->show();
     flag.append(flagBlock);
     int playerLives = 3;
