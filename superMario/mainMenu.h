@@ -7,14 +7,16 @@
 #include <QLabel>
 #include <QApplication>
 
+#include "levelSelect.h"
+
 class MainMenu : public QDialog
 {
     Q_OBJECT
 public:
     explicit MainMenu(QWidget *parent = nullptr);
-
+    void openLevelSelect();
 signals:
-    void startGame();
+    void startGame(int level);
 
 private:
     QPushButton *startButton;

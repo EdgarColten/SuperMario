@@ -24,13 +24,13 @@ public:
     ~MainWindow();
     QLabel *castle;
     void showMainMenu();
+    void startGame(int level);
 
 public slots:
     void startNextLevel();
 
 private:
     void createLevel();
-    void startGame();
 
     QList<Block*> blocks; // All blocks that form the level
     QList<Mushroom*> mushrooms; // All blocks that form the level

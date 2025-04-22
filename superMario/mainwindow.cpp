@@ -21,11 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     mario->show();
 */
     MainMenu *menu = new MainMenu(this);
-    connect(menu, &MainMenu::startGame, this, [=]() {
-        menu->close();
-        startGame();
-    });
-    menu->exec();
+    connect(menu, &MainMenu::startGame, this, &MainWindow::startGame);
+    menu->show();
 }
 
 MainWindow::~MainWindow()
@@ -63,7 +60,7 @@ void MainWindow::showMainMenu()
         MainMenu *menu = new MainMenu(this);
         connect(menu, &MainMenu::startGame, this, [=]() {
             menu->close();
-            startGame();
+            startGame(1);
         });
         menu->exec();
 }
@@ -124,10 +121,16 @@ void MainWindow::createLevel()
 
 }
 
-void MainWindow::startGame()
+void MainWindow::startGame(int level)
 {
     setFixedSize(800, 600);
-    createLevel();
+    if(level == 1)
+        createLevel();
+    else if(level == 2)
+        return;
+    else if(level == 3)
+        return;
+
     mario = new Character(this);
     mario->move(100, 0);
 

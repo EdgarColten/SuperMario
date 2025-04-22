@@ -1,4 +1,4 @@
-#include "mainmenu.h"
+#include "mainMenu.h"
 
 MainMenu::MainMenu(QWidget *parent) : QDialog(parent)
 {
@@ -33,7 +33,9 @@ MainMenu::MainMenu(QWidget *parent) : QDialog(parent)
 
     startButton->move(400,300);
 
-    connect(startButton, &QPushButton::clicked, this, &MainMenu::startGame);
+    connect(startButton, &QPushButton::clicked, this, &MainMenu::openLevelSelect);
+
+//    connect(startButton, &QPushButton::clicked, this, &MainMenu::openLevelSelect);
 
     QPushButton *exitButton = new QPushButton(this);
     exitButton->setFixedSize(300,100);
@@ -56,3 +58,15 @@ MainMenu::MainMenu(QWidget *parent) : QDialog(parent)
         QApplication::quit();
     });
 }
+
+void MainMenu::openLevelSelect()
+{
+    this->close();
+    LevelSelect *levelSelect = new LevelSelect(this);
+    connect(levelSelect, &LevelSelect::levelChosen, this, [this](int level) {
+        emit startGame(level); // Or directly call a function
+        this->close();
+    });
+    levelSelect->exec(); // Modal dialog
+}
+
