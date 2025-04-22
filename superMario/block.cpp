@@ -1,4 +1,4 @@
-#include "Block.h"
+#include "block.h"
 
 Block::Block(const QString &imagePath, QWidget *parent) : QLabel(parent)
 {

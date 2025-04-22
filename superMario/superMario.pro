@@ -11,15 +11,25 @@ CONFIG += c++17
 SOURCES += \
     block.cpp \
     character.cpp \
+    flag.cpp \
+    goomba.cpp \
     itemBlock.cpp \
+    koopa.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mushroom.cpp \
+    pipe.cpp
 
 HEADERS += \
     block.h \
     character.h \
+    flag.h \
+    goomba.h \
     itemBlock.h \
-    mainwindow.h
+    koopa.h \
+    mainwindow.h \
+    mushroom.h \
+    pipe.h
 
 FORMS += \
     mainwindow.ui

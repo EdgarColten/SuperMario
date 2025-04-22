@@ -4,8 +4,15 @@
         <file>block2.png</file>
         <file>block3.png</file>
         <file>block.png</file>
-        <file>mushroom.png</file>
         <file>question_block.png</file>
         <file>mario.png</file>
+        <file>mushroom.png</file>
+        <file>Anigoomba.gif</file>
+        <file>Anikoopa.gif</file>
+        <file>mediumPipe.png</file>
+        <file>stompedGoomba.png</file>
+        <file>stompedKoopa.png</file>
+        <file>castle.png</file>
+        <file>flag.png</file>
     </qresource>
 </RCC>
