@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     mario->setKoopas(koopas);
     mario->setPipes(pipes);
     mario->setFlag(flag);
+    mario->setCastle(castle);
 
     mario->show();
 }
@@ -65,12 +66,12 @@ void MainWindow::createLevel()
     flagBlock->move(800, 110);
     flagBlock->show();
     flag.append(flagBlock);
-    int playerLives = 3;
+//    int playerLives = 3;
     QString currentLevelName = "1-2";
-    connect(flagBlock, &Flag::levelCompleted, this, [this, flagBlock, playerLives, currentLevelName]() { mario->freeze();flagBlock->levelCompletedHandler(currentLevelName, playerLives);});
+    connect(flagBlock, &Flag::levelCompleted, this, [this, flagBlock, currentLevelName]() { mario->freeze();flagBlock->levelCompletedHandler(currentLevelName);});
     connect(flagBlock, &Flag::transitionToNextLevel, this, &MainWindow::startNextLevel);
 
-    QLabel *castle = new QLabel(this);
+    castle = new QLabel(this);
     QPixmap castlePix(":/images/castle.png");
     castle->setPixmap(castlePix.scaled(200, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     castle->setFixedSize(200, 300);

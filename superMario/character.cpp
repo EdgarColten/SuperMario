@@ -22,7 +22,7 @@ void Character::setGoombas(const QList<Goomba*>& gList) { goombaList = gList; }
 void Character::setKoopas(const QList<Koopa*>& kList) { koopaList = kList; }
 void Character::setPipes(const QList<Pipe*>& pList) { pipeList = pList; }
 void Character::setFlag(const QList<Flag*> &f) { flagList = f; }
-
+void Character::setCastle(QLabel *c){ castle = c; }
 void Character::freeze() { frozen = true; }
 void Character::unfreeze() { frozen = false; }
 
@@ -63,6 +63,7 @@ void Character::updateMovement()
         for (Koopa *koopa : koopaList) koopa->move(koopa->x() - dx, koopa->y());
         for (Pipe *pipe : pipeList) pipe->move(pipe->x() - dx, pipe->y());
         for (Flag *flag : flagList) flag->move(flag->x() - dx, flag->y());
+        castle->move(castle->x() - dx, castle->y());
     } else if (dx < 0 && x() <= 0) {
         // Prevent moving off the screen left
     } else {

@@ -16,7 +16,7 @@ signals:
     void levelCompleted();
     void transitionToNextLevel();
 public slots:
-    void levelCompletedHandler(const QString &levelName, int lives);
+    void levelCompletedHandler(const QString &levelName);
 private:
     QLabel *completionBanner = nullptr;
     QWidget *overlay = nullptr;
