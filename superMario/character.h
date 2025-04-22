@@ -31,7 +31,7 @@ public:
     void setGoombas(const QList<Goomba*>& gList);
     void setKoopas(const QList<Koopa*>& kList);
     void setPipes(const QList<Pipe*>& pList);
-
+    void setCastle(QLabel* c);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override; // 👈 ADD THIS!
@@ -52,6 +52,7 @@ private:
     int horizontalSpeed;
     bool onGround;
 
+    QLabel* castle = nullptr;
     QList<Block*> blockList;
     QList<Mushroom*> mushroomList;
 

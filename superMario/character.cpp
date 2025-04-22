@@ -39,6 +39,11 @@ void Character::setPipes(const QList<Pipe*>& pList) {
     pipeList = pList;
 }
 
+void Character::setCastle(QLabel *c)
+{
+    castle = c;
+}
+
 void Character::setFlag(const QList<Flag*> &f)
 {
     flagList = f;
@@ -113,6 +118,7 @@ void Character::updateMovement()
             pipe->move(pipe->x() - dx, pipe->y());
         for (Flag *flag : flagList)
             flag->move(flag->x() - dx, flag->y());
+        castle->move(castle->x() - dx, castle->y());
     }
     else if( dx < 0 && x() <= 0){}
 

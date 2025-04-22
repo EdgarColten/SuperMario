@@ -15,7 +15,7 @@ QRect Flag::getHitBox() const
     return rect;
 }
 
-void Flag::levelCompletedHandler(const QString &levelName, int lives)
+void Flag::levelCompletedHandler(const QString &levelName)
 {
     if (!completionBanner)
     {
@@ -25,7 +25,7 @@ void Flag::levelCompletedHandler(const QString &levelName, int lives)
         overlay->show();
 
         completionBanner = new QLabel(overlay);
-        completionBanner->setText(QString("World %1\nLives: %2").arg(levelName).arg(lives));
+        completionBanner->setText(QString("World %1").arg(levelName));
         completionBanner->setStyleSheet("QLabel { background-color: rgba(0, 0, 0, 180); color: white; font-size: 24px; border: 2px solid white; padding: 20px; }");
         completionBanner->setAlignment(Qt::AlignCenter);
         completionBanner->setFixedSize(300, 150);

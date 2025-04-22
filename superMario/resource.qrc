@@ -14,5 +14,6 @@
         <file>stompedKoopa.png</file>
         <file>castle.png</file>
         <file>flag.png</file>
+        <file>marioLogo.png</file>
     </qresource>
 </RCC>
