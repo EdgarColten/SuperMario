@@ -14,6 +14,9 @@ Character::Character(QWidget *parent)
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
     movementTimer->start(30);
+
+    invincibilityTimer = new QTimer(this);
+    connect(invincibilityTimer, &QTimer::timeout, this, &Character::endInvincibility);
 }
 
 void Character::setBlocks(const QList<Block*> &blocks) { blockList = blocks; }
@@ -91,6 +94,70 @@ void Character::updateMovement()
                 move(pipe->x() - width(), y());
             else if (dx < 0)
                 move(pipe->x() + pipe->width(), y());
+        }
+    }
+
+        // Horizontal collisions with Koopas (damage handling)
+    for (int i = 0; i < koopaList.size(); ++i)
+    {
+        Koopa* k = koopaList[i];
+        if (k->isStomped()) continue; // Optional: skip if Koopa is stomped/shelled
+
+        if (geometry().intersects(k->geometry()))
+        {
+            if (!marioBottomTouchesKoopaTop(k)) // horizontal collision
+            {
+                if (invincible) continue;
+
+                if (stage == 2)
+                {
+                    stage = 1;
+                    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    setFixedSize(40, 40);
+                    move(x(), y() + 20);
+                }
+                else
+                {
+                    //change to game over
+
+                makeInvincible(); // Avoid repeated hits
+                break;
+            }
+        }
+    }
+
+
+
+    // Horizontal collisions with Goombas (damage handling)
+    for (int i = 0; i < goombaList.size(); ++i)
+    {
+        Goomba* g = goombaList[i];
+        if (g->isStomped()) continue;
+
+        if (geometry().intersects(g->geometry()))
+        {
+            if (!marioBottomTouchesGoombaTop(g)) // only horizontal, not stomping
+            {
+                if (invincible) {
+                    // If Mario is invincible, don't process damage
+                    continue;
+                }
+
+                if (stage == 2)
+                {
+                    stage = 1;
+                    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    setFixedSize(40, 40);
+                    move(x(), y() + 20); // shrink back
+                }
+
+                else
+                {
+                    //change to game over
+                }
+                makeInvincible();  // Activate invincibility when Mario is hit
+                break;
+            }
         }
     }
 
@@ -203,6 +270,19 @@ bool Character::marioHitsMushroom(Mushroom *m)
     QRect marioRect = this->geometry();
     QRect mushRect = m->geometry();
     return marioRect.intersects(mushRect);
+}
+
+void Character::makeInvincible()
+{
+    if (!invincible) {
+        invincible = true;  // Set invincible flag to true
+        invincibilityTimer->start(2000); // Set invincibility for 3 seconds
+    }
+}
+
+void Character::endInvincibility()
+{
+    invincible = false;  // Set invincible flag to false after the timer ends
 }
 
 bool Character::marioBottomTouchesGoombaTop(Goomba *g)
