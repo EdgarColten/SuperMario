@@ -12,6 +12,7 @@
 #include "goomba.h"
 #include "pipe.h"
 #include "flag.h"
+#include "mainMenu.h"
 
 
 class MainWindow : public QMainWindow
@@ -21,6 +22,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QLabel *castle;
+    void showMainMenu();
+    void startGame(int level);
 
 public slots:
     void startNextLevel();

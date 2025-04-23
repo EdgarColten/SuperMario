@@ -31,6 +31,7 @@ public:
     void setGoombas(const QList<Goomba*>& gList);
     void setKoopas(const QList<Koopa*>& kList);
     void setPipes(const QList<Pipe*>& pList);
+    void setCastle(QLabel* c);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -52,6 +53,7 @@ private:
     int horizontalSpeed;
     bool onGround;
 
+    QLabel* castle = nullptr;
     QList<Block*> blockList;
     QList<Mushroom*> mushroomList;
 
@@ -69,6 +71,14 @@ private:
 
     bool marioBottomTouchesGoombaTop(Goomba *g);
     bool marioBottomTouchesKoopaTop(Koopa *k);
+
+    int stage; // 1 = small, 2 = big
+
+    void makeInvincible(); // Make Mario invincible for a short time
+    void endInvincibility(); // Ends invincibility after timer
+
+    bool invincible;  // Flag to check if Mario is invincible
+    QTimer *invincibilityTimer;  // Timer to handle invincibility duration
 
 };
 

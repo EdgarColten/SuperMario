@@ -25,15 +25,24 @@ Koopa::Koopa(const QString &koopaImagePath, QWidget *parent)
 
 void Koopa::moveLeft()
 {
-    // Move left by speed
-    move(x() - speed, y());
+    int nextX = x() - speed;
+
+    // Check for pipe collision
+    for (Pipe *pipe : pipes) {
+        if (this->geometry().adjusted(-speed, 0, 0, 0).intersects(pipe->geometry())) {
+            speed *= -1;  // Reverse direction
+            return;
+        }
+    }
+
+    move(nextX, y());
 
     // Stop or reset when off-screen
-    if (x() + width() < 0) {
-        // move(parentWidget()->width(), y()); // reset to right side
+    if (x() + width() < 0 || x() > parentWidget()->width()) {
         moveTimer->stop();
     }
 }
+
 
 void Koopa::stomp() {
     if(stomped) {
@@ -63,4 +72,9 @@ void Koopa::stomp() {
 
 bool Koopa::isStomped() const {
     return stomped;
+}
+
+void Koopa::setPipes(const QList<Pipe *> &pipeList)
+{
+    pipes = pipeList;
 }

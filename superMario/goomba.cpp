@@ -30,15 +30,26 @@ Goomba::Goomba(const QString &goombaImagePath, QWidget *parent)
 
 void Goomba::moveLeft()
 {
-    // Move left by speed
-    move(x() - speed, y());
+    int nextX = x() - speed;
 
-    // Stop or reset when off-screen
-    if (x() + width() < 0) {
-        // move(parentWidget()->width(), y()); // reset to right side
+    // Check for pipe collision
+    for (Pipe *pipe : pipes) {
+        if (this->geometry().adjusted(-speed, 0, 0, 0).intersects(pipe->geometry())) {
+            speed *= -1;  // Reverse direction
+            return;
+        }
+
+    }
+
+    move(nextX, y());
+
+    // Stop when off-screen
+    if (x() + width() < 0 || x() > parentWidget()->width()) {
         moveTimer->stop();
     }
 }
+
+
 
 void Goomba::stomp() {
     if(stomped) {
@@ -69,3 +80,8 @@ void Goomba::stomp() {
 bool Goomba::isStomped() const {
     return stomped;
 }
+
+void Goomba::setPipes(const QList<Pipe*> &pipeList) {
+    pipes = pipeList;
+}
+
