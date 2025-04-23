@@ -1,6 +1,7 @@
 #include "Koopa.h"
 #include "character.h"
 #include <QPainter>
+
 #include <QMovie>
 #include <QPixmap>
 #include <QTransform>
