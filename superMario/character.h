@@ -72,6 +72,15 @@ private:
     bool marioBottomTouchesGoombaTop(Goomba *g);
     bool marioBottomTouchesKoopaTop(Koopa *k);
 
+    int stage; // 1 = small, 2 = big
+
+
+    void makeInvincible(); // Make Mario invincible for a short time
+    void endInvincibility(); // Ends invincibility after timer
+
+    bool invincible;  // Flag to check if Mario is invincible
+    QTimer *invincibilityTimer;  // Timer to handle invincibility duration
+
 };
 
 #endif // CHARACTER_H
