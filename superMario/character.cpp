@@ -208,18 +208,7 @@ bool Character::marioHitsMushroom(Mushroom *m)
     return marioRect.intersects(mushRect);
 }
 
-void Character::makeInvincible()
-{
-    if (!invincible) {
-        invincible = true;  // Set invincible flag to true
-        invincibilityTimer->start(2000); // Set invincibility for 3 seconds
-    }
-}
 
-void Character::endInvincibility()
-{
-    invincible = false;  // Set invincible flag to false after the timer ends
-}
 
 bool Character::marioBottomTouchesGoombaTop(Goomba *g)
 {
