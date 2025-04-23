@@ -120,8 +120,9 @@ void Character::updateMovement()
                 verticalVelocity = 0;
 
                 ItemBlock *ib = qobject_cast<ItemBlock*>(block);
-                if (ib){
+                if (ib && isHit == 0){
                     ib->hit();
+                    isHit++;
                     Mushroom *mushroom = new Mushroom(":/images/mushroom.png", parentWidget());
                     mushroom->move(block->x() + 10, block->y() - 40);
                     mushroom->show();

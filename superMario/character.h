@@ -33,6 +33,8 @@ public:
     void setPipes(const QList<Pipe*>& pList);
     void setCastle(QLabel* c);
 
+    int isHit = 0;
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override; // 👈 ADD THIS!
