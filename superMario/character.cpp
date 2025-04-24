@@ -293,8 +293,8 @@ void Character::updateMovement()
             stage =2;
             continue;
             */
-            stillPixmapRight = QPixmap(":/images/bigMario.gif").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            stillPixmapRight = QPixmap(":/images/bigMario.gif").scaled(65, 66, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(65, 66, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
             delete walkRightMovie;
             delete walkLeftMovie;
