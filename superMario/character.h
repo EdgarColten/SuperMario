@@ -61,6 +61,7 @@ private:
 
     QList<Flag*> flagList;
     bool frozen = false;
+    bool isWalkingRight = false;
     Flag *flag = nullptr;
 
     QList<Goomba*> goombaList;
@@ -69,8 +70,15 @@ private:
 
     QSet<int> keysPressed; // 👈 ADD THIS!
 
-    bool marioHitsMushroom(Mushroom *m);
+    QMovie* walkRightMovie;
+    QMovie* walkLeftMovie;
+    QPixmap stillPixmapRight;
+    QPixmap stillPixmapLeft;
 
+    enum Direction { NONE, LEFT, RIGHT };
+    Direction currentDirection;
+
+    bool marioHitsMushroom(Mushroom *m);
     bool marioBottomTouchesGoombaTop(Goomba *g);
     bool marioBottomTouchesKoopaTop(Koopa *k);
 

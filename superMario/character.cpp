@@ -6,10 +6,21 @@
 Character::Character(QWidget *parent)
     : QLabel(parent), verticalVelocity(0), horizontalSpeed(10), onGround(false)
 {
-    setPixmap(QPixmap(":/images/mario.png")
-                  .scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    // setPixmap(QPixmap(":/images/marioOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setFixedSize(40, 40);
     setFocusPolicy(Qt::StrongFocus);
+
+    stillPixmapRight = QPixmap(":/images/marioOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    stillPixmapLeft = QPixmap(":/images/marioLeftOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    setPixmap(stillPixmapRight);
+    currentDirection = NONE;
+
+    walkRightMovie = new QMovie(":/images/marioWalking.gif");
+    walkLeftMovie = new QMovie(":/images/marioWalkingLeft.gif");
+
+    walkRightMovie->setScaledSize(QSize(40, 40));
+    walkLeftMovie->setScaledSize(QSize(40, 40));
 
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
@@ -33,6 +44,20 @@ void Character::keyPressEvent(QKeyEvent *event)
 
     keysPressed.insert(event->key());
 
+    if (event->key() == Qt::Key_Right && currentDirection != RIGHT)
+    {
+        setMovie(walkRightMovie);
+        walkRightMovie->start();
+        currentDirection = RIGHT;
+    }
+
+    if (event->key() == Qt::Key_Left && currentDirection != LEFT)
+    {
+        setMovie(walkLeftMovie);
+        walkLeftMovie->start();
+        currentDirection = LEFT;
+    }
+
     if (event->key() == Qt::Key_Space && onGround)
     {
         verticalVelocity = -20;
@@ -43,6 +68,18 @@ void Character::keyPressEvent(QKeyEvent *event)
 void Character::keyReleaseEvent(QKeyEvent *event)
 {
     keysPressed.remove(event->key());
+
+    if ((event->key() == Qt::Key_Right && currentDirection == RIGHT) ||
+        (event->key() == Qt::Key_Left && currentDirection == LEFT))
+    {
+        setMovie(nullptr);
+        if (currentDirection == RIGHT)
+            setPixmap(stillPixmapRight);
+        else
+            setPixmap(stillPixmapLeft);
+
+        currentDirection = NONE;
+    }
 }
 
 void Character::updateMovement()
@@ -154,7 +191,19 @@ void Character::updateMovement()
     for (int i = 0; i < mushroomList.size(); ++i) {
         Mushroom* m = mushroomList[i];
         if (marioHitsMushroom(m)) {
-            setPixmap(QPixmap(":/images/mario.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            stillPixmapRight = QPixmap(":/images/bigMario.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            delete walkRightMovie;
+            delete walkLeftMovie;
+
+            walkRightMovie = new QMovie(":/images/bigMarioWalking.gif");
+            walkLeftMovie = new QMovie(":/images/bigMarioWalkingLeft.gif");
+
+            walkRightMovie->setScaledSize(QSize(60, 60));
+            walkLeftMovie->setScaledSize(QSize(60, 60));
+
+            setPixmap(stillPixmapRight);
             setFixedSize(60, 60);
             move(x(), y() - 20);
             m->deleteLater();

@@ -22,5 +22,11 @@
         <file>startBut.png</file>
         <file>startBut1.jpg</file>
         <file>titleBG1.png</file>
+        <file>marioLeftOG.png</file>
+        <file>marioWalkingLeft.gif</file>
+        <file>bigMarioWalking.gif</file>
+        <file>bigMarioWalkingLeft.gif</file>
+        <file>bigMario.png</file>
+        <file>bigMarioLeft.png</file>
     </qresource>
 </RCC>
