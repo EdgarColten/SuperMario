@@ -33,7 +33,6 @@ public:
     void setPipes(const QList<Pipe*>& pList);
     void setCastle(QLabel* c);
     void setBackground(QLabel* bg);
-    int isHit = 0;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -46,6 +45,8 @@ private slots:
     void updateMovement();
 
 private:
+    int isHit = 0;
+
     void applyGravity();
     void checkCollisions();
 

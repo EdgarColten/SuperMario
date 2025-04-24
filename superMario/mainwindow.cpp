@@ -298,11 +298,11 @@ void MainWindow::createLevel2()
     pipe4->show();
     pipes.append(pipe4);
 
-    ItemBlock *itemBlock1 = new ItemBlock(":/images/question_block.png", ":/images/mushroom.png", this);
+    Block *block4 = new Block(":/images/block3.png", this);
     // Place it between platforms (for example at y = 340)
-    itemBlock1->move(4250, 260);
-    itemBlock1->show();
-    blocks.append(itemBlock1);
+    block4->move(4250, 260);
+    block4->show();
+    blocks.append(block4);
 
 
     Flag *flagBlock = new Flag(":/images/flag.png", this);
