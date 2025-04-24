@@ -26,7 +26,8 @@
         <file>marioWalkingLeft.gif</file>
         <file>bigMarioWalking.gif</file>
         <file>bigMarioWalkingLeft.gif</file>
-        <file>bigMario.png</file>
         <file>bigMarioLeft.png</file>
+        <file>bigMario.gif</file>
+        <file>bigMarioLeft.gif</file>
     </qresource>
 </RCC>

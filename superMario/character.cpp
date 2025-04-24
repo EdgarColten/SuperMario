@@ -191,7 +191,7 @@ void Character::updateMovement()
     for (int i = 0; i < mushroomList.size(); ++i) {
         Mushroom* m = mushroomList[i];
         if (marioHitsMushroom(m)) {
-            stillPixmapRight = QPixmap(":/images/bigMario.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            stillPixmapRight = QPixmap(":/images/bigMario.gif").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
             delete walkRightMovie;
