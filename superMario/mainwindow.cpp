@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,12 +9,15 @@ MainWindow::MainWindow(QWidget *parent)
     // Create Mario; start him high so he falls onto a block
     mario = new Character(this);
     mario->move(100, 0);
+
     mario->setBlocks(blocks);
+    mario->setMush(mushrooms);
     mario->setGoombas(goombas);
     mario->setKoopas(koopas);
     mario->setPipes(pipes);
-    mario->show();
+    mario->setFlag(flag);
 
+    mario->show();
 }
 
 MainWindow::~MainWindow()
@@ -23,10 +26,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::createLevel()
 {
+
     // Platform 2: a row of blocks at y = 500 (ground level)
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 30; ++i) {
         Block *groundBlock = new Block(":/images/block.png", this);
-        groundBlock->move(i * 55 + 20, 500);
+        groundBlock->move(i * 55 + 20 + (i *5), 500);
         groundBlock->show();
         blocks.append(groundBlock);
     }
@@ -53,7 +57,31 @@ void MainWindow::createLevel()
     goombas.append(goomba);
 
     Pipe *pipe = new Pipe(":/images/mediumPipe.png", this);
-    pipe->move(300, 400);
+    pipe->move(500, 400);
     pipe->show();
     pipes.append(pipe);
+
+    Flag *flagBlock = new Flag(":/images/flag.png", this);
+    flagBlock->move(400, 110);
+    flagBlock->show();
+    flag.append(flagBlock);
+    int playerLives = 3;
+    QString currentLevelName = "1-2";
+    connect(flagBlock, &Flag::levelCompleted, this, [this, flagBlock, playerLives, currentLevelName]() { mario->freeze();flagBlock->levelCompletedHandler(currentLevelName, playerLives);});
+    connect(flagBlock, &Flag::transitionToNextLevel, this, &MainWindow::startNextLevel);
+
+    QLabel *castle = new QLabel(this);
+    QPixmap castlePix(":/images/castle.png");
+    castle->setPixmap(castlePix.scaled(200, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    castle->setFixedSize(200, 300);
+    castle->move(550, 200);
+    castle->lower();
+    castle->show();
+
+}
+
+void MainWindow::startNextLevel()
+{
+    mario->unfreeze();
+    mario->move(100,0);
 }

@@ -12,7 +12,7 @@ Goomba::Goomba(const QString &goombaImagePath, QWidget *parent)
 
     // Connecting GIF to timer
     moveTimer = new QTimer(this);
-    connect(moveTimer, &QTimer::timeout, this, &Goomba::moveGoomba);
+    connect(moveTimer, &QTimer::timeout, this, &Goomba::moveLeft);
     moveTimer->start(20); // ~60 FPS
 
     //Movement speed
@@ -28,11 +28,14 @@ Goomba::Goomba(const QString &goombaImagePath, QWidget *parent)
     stomped = false;
 }
 
-void Goomba::moveGoomba() {
-    move(x() + direction * speed, y());
+void Goomba::moveLeft()
+{
+    // Move left by speed
+    move(x() - speed, y());
 
-    // Optionally stop when off-screen
-    if (x() + width() < 0 || x() > parentWidget()->width()) {
+    // Stop or reset when off-screen
+    if (x() + width() < 0) {
+        // move(parentWidget()->width(), y()); // reset to right side
         moveTimer->stop();
     }
 }

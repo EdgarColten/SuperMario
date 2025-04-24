@@ -1,7 +1,7 @@
 #ifndef ITEMBLOCK_H
 #define ITEMBLOCK_H
 
-#include "Block.h"
+#include "block.h"
 #include <QPropertyAnimation>
 
 class ItemBlock : public Block

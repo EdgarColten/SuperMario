@@ -7,7 +7,7 @@
 
 class Pipe : public QLabel
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
     Pipe(const QString &imagePath, QWidget *parent = nullptr);
 };
