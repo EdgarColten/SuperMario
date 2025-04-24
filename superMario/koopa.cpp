@@ -38,6 +38,12 @@ void Koopa::moveLeft()
             return;
         }
     }
+    for (Block *block : blocks) {
+        if (futureBounds.intersects(block->geometry())) {
+            speed *= -1;  // Reverse direction
+            return;
+        }
+    }
 
     // Move to next position if no collision
     move(nextX, y());
@@ -79,4 +85,9 @@ bool Koopa::isStomped() const {
 void Koopa::setPipes(const QList<Pipe *> &pipeList)
 {
     pipes = pipeList;
+}
+
+void Koopa::setBlocks(const QList<Block *> &blockList)
+{
+    blocks = blockList;
 }

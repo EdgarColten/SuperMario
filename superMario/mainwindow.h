@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 #include <QList>
+#include <QLabel>
+#include <QTimer>
+#include <QDebug>
+#include <QPixmap>
 
 #include "Block.h"
 #include "itemBlock.h"
@@ -31,6 +35,10 @@ public slots:
 
 private:
     void createLevel();
+    void createLevel2();
+
+    QLabel *gameOverBanner = nullptr;
+    QWidget *overlay = nullptr;
 
     QList<Block*> blocks; // All blocks that form the level
     QList<Mushroom*> mushrooms; // All blocks that form the level
@@ -38,6 +46,8 @@ private:
     QList<Koopa*> koopas;
     QList<Pipe*> pipes;
     QList<Flag*> flag;
+    QLabel *backgroundImage;
+
 
     Character *mario;
 };

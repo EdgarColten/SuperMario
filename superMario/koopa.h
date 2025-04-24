@@ -8,6 +8,7 @@
 #include <QMovie>
 #include <QTimer>
 #include "pipe.h"
+#include "block.h"
 
 class Character;
 
@@ -21,6 +22,7 @@ public:
     bool isStomped() const;
     bool isSliding() const;
     void setPipes(const QList<Pipe*>& pipeList);
+    void setBlocks(const QList<Block*>& blockList);
 
 
 private:
@@ -31,6 +33,7 @@ private:
     bool stomped;
     bool sliding;
     QList<Pipe*> pipes;
+    QList<Block*> blocks;
 };
 
 #endif // KOOPA_H

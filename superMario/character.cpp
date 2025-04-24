@@ -6,17 +6,33 @@
 Character::Character(QWidget *parent)
     : QLabel(parent), verticalVelocity(0), horizontalSpeed(10), onGround(false)
 {
-    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+ //   setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setFixedSize(40, 40);
     setFocusPolicy(Qt::StrongFocus);
 
-    movementTimer = new QTimer(this);
+/*    movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
     movementTimer->start(30);
 
     invincibilityTimer = new QTimer(this);
     connect(invincibilityTimer, &QTimer::timeout, this, &Character::endInvincibility);
     stage =1;
+*/
+    stillPixmapRight = QPixmap(":/images/marioOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    stillPixmapLeft = QPixmap(":/images/marioLeftOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    setPixmap(stillPixmapRight);
+    currentDirection = NONE;
+
+    walkRightMovie = new QMovie(":/images/marioWalking.gif");
+    walkLeftMovie = new QMovie(":/images/marioWalkingLeft.gif");
+
+    walkRightMovie->setScaledSize(QSize(40, 40));
+    walkLeftMovie->setScaledSize(QSize(40, 40));
+
+    movementTimer = new QTimer(this);
+    connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
+    movementTimer->start(30);
 }
 
 void Character::setBlocks(const QList<Block*> &blocks) { blockList = blocks; }
@@ -26,6 +42,8 @@ void Character::setKoopas(const QList<Koopa*>& kList) { koopaList = kList; }
 void Character::setPipes(const QList<Pipe*>& pList) { pipeList = pList; }
 void Character::setFlag(const QList<Flag*> &f) { flagList = f; }
 void Character::setCastle(QLabel *c){ castle = c; }
+void Character::setBackground(QLabel* bg){background = bg;}
+
 void Character::freeze() { frozen = true; }
 void Character::unfreeze() { frozen = false; }
 
@@ -34,6 +52,25 @@ void Character::keyPressEvent(QKeyEvent *event)
     if (frozen) return;
 
     keysPressed.insert(event->key());
+/*
+    if (event->key() == Qt::Key_Space && onGround)
+    {
+        verticalVelocity = -20;
+        onGround = false;
+    }*/
+    if (event->key() == Qt::Key_Right && currentDirection != RIGHT)
+    {
+        setMovie(walkRightMovie);
+        walkRightMovie->start();
+        currentDirection = RIGHT;
+    }
+
+    if (event->key() == Qt::Key_Left && currentDirection != LEFT)
+    {
+        setMovie(walkLeftMovie);
+        walkLeftMovie->start();
+        currentDirection = LEFT;
+    }
 
     if (event->key() == Qt::Key_Space && onGround)
     {
@@ -44,7 +81,20 @@ void Character::keyPressEvent(QKeyEvent *event)
 
 void Character::keyReleaseEvent(QKeyEvent *event)
 {
+   // keysPressed.remove(event->key());
     keysPressed.remove(event->key());
+
+    if ((event->key() == Qt::Key_Right && currentDirection == RIGHT) ||
+        (event->key() == Qt::Key_Left && currentDirection == LEFT))
+    {
+        setMovie(nullptr);
+        if (currentDirection == RIGHT)
+            setPixmap(stillPixmapRight);
+        else
+            setPixmap(stillPixmapLeft);
+
+        currentDirection = NONE;
+    }
 }
 
 void Character::updateMovement()
@@ -67,6 +117,8 @@ void Character::updateMovement()
         for (Pipe *pipe : pipeList) pipe->move(pipe->x() - dx, pipe->y());
         for (Flag *flag : flagList) flag->move(flag->x() - dx, flag->y());
         castle->move(castle->x() - dx, castle->y());
+        if (background)
+            background->move(background->x() - dx, background->y());
     } else if (dx < 0 && x() <= 0) {
         // Prevent moving off the screen left
     } else {
@@ -105,7 +157,7 @@ void Character::updateMovement()
 
         if (geometry().intersects(k->geometry()))
         {
-            if (!marioBottomTouchesKoopaTop(k))
+            if (marioHitsKoopaFront(k))
             {
                 if (invincible) continue; // Skip if Mario is invincible
 
@@ -144,7 +196,7 @@ void Character::updateMovement()
 
         if (geometry().intersects(g->geometry()))
         {
-            if (!marioBottomTouchesGoombaTop(g))
+            if (marioHitsGoombaFront(g))
             {
                 if (invincible) continue; // Skip if Mario is invincible
 
@@ -163,7 +215,7 @@ void Character::updateMovement()
                 {
                     // Make END GAME LOGIC
                     qDebug() << "Current Mario stage:" << stage;
-
+                    //emit gameOver();
                 }
 
                 makeInvincible();
@@ -198,8 +250,9 @@ void Character::updateMovement()
                 verticalVelocity = 0;
 
                 ItemBlock *ib = qobject_cast<ItemBlock*>(block);
-                if (ib){
+                if (ib && isHit == 0){
                     ib->hit();
+                    isHit++;
                     Mushroom *mushroom = new Mushroom(":/images/mushroom.png", parentWidget());
                     mushroom->move(block->x() + 10, block->y() - 40);
                     mushroom->show();
@@ -231,12 +284,32 @@ void Character::updateMovement()
     for (int i = 0; i < mushroomList.size(); ++i) {
         Mushroom* m = mushroomList[i];
         if (marioHitsMushroom(m)) {
+            /*
             setPixmap(QPixmap(":/images/mario.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             setFixedSize(60, 60);
             move(x(), y() - 20);
             m->deleteLater();
             mushroomList.removeAt(i);
             stage =2;
+            continue;
+            */
+            stillPixmapRight = QPixmap(":/images/bigMario.gif").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            delete walkRightMovie;
+            delete walkLeftMovie;
+
+            walkRightMovie = new QMovie(":/images/bigMarioWalking.gif");
+            walkLeftMovie = new QMovie(":/images/bigMarioWalkingLeft.gif");
+
+            walkRightMovie->setScaledSize(QSize(60, 60));
+            walkLeftMovie->setScaledSize(QSize(60, 60));
+
+            setPixmap(stillPixmapRight);
+            setFixedSize(60, 60);
+            move(x(), y() - 20);
+            m->deleteLater();
+            mushroomList.removeAt(i);
             continue;
         }
     }
@@ -312,6 +385,27 @@ bool Character::marioBottomTouchesKoopaTop(Koopa *k)
            marioRect.bottom() <= koopaRect.top() + 10 &&
            marioRect.right() > koopaRect.left() &&
            marioRect.left() < koopaRect.right();
+}
+bool Character::marioHitsGoombaFront(Goomba *g)
+{
+    QRect marioRect = this->geometry();
+    QRect goombaRect = g->geometry();
+
+    return marioRect.right() >= goombaRect.left() &&
+           marioRect.left() <= goombaRect.right() &&
+           marioRect.bottom() > goombaRect.top() + 10 &&
+           marioRect.top() < goombaRect.bottom() - 10;
+}
+
+bool Character::marioHitsKoopaFront(Koopa *k)
+{
+    QRect marioRect = this->geometry();
+    QRect koopaRect = k->geometry();
+
+    return marioRect.right() >= koopaRect.left() &&
+           marioRect.left() <= koopaRect.right() &&
+           marioRect.bottom() > koopaRect.top() + 10 &&
+           marioRect.top() < koopaRect.bottom() - 10;
 }
 
 void Character::makeInvincible()

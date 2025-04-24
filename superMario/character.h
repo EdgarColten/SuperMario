@@ -32,10 +32,15 @@ public:
     void setKoopas(const QList<Koopa*>& kList);
     void setPipes(const QList<Pipe*>& pList);
     void setCastle(QLabel* c);
+    void setBackground(QLabel* bg);
+    int isHit = 0;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override; // 👈 ADD THIS!
+
+signals:
+    void gameOver();
 
 private slots:
     void updateMovement();
@@ -53,12 +58,15 @@ private:
     int horizontalSpeed;
     bool onGround;
 
+    QLabel* background = nullptr;
+
     QLabel* castle = nullptr;
     QList<Block*> blockList;
     QList<Mushroom*> mushroomList;
 
     QList<Flag*> flagList;
     bool frozen = false;
+    bool isWalkingRight = false;
     Flag *flag = nullptr;
 
     QList<Goomba*> goombaList;
@@ -67,12 +75,23 @@ private:
 
     QSet<int> keysPressed; // 👈 ADD THIS!
 
+    QMovie* walkRightMovie;
+    QMovie* walkLeftMovie;
+    QPixmap stillPixmapRight;
+    QPixmap stillPixmapLeft;
+
+    enum Direction { NONE, LEFT, RIGHT };
+    Direction currentDirection;
+
     bool marioHitsMushroom(Mushroom *m);
 
     bool marioBottomTouchesGoombaTop(Goomba *g);
     bool marioBottomTouchesKoopaTop(Koopa *k);
 
-    int stage; // 1 = small, 2 = big
+    bool marioHitsGoombaFront(Goomba *g);
+    bool marioHitsKoopaFront(Koopa *k);
+
+    int stage = 1; // 1 = small, 2 = big
 
     void makeInvincible(); // Make Mario invincible for a short time
     void endInvincibility(); // Ends invincibility after timer
