@@ -27,20 +27,22 @@ void Koopa::moveLeft()
 {
     int nextX = x() - speed;
 
+    // Predict future geometry after moving
+    QRect futureBounds = this->geometry();
+    futureBounds.moveLeft(nextX); // Shift entire bounding box to predicted x position
+
     // Check for pipe collision
     for (Pipe *pipe : pipes) {
-        if (this->geometry().adjusted(-speed, 0, 0, 0).intersects(pipe->geometry())) {
+        if (futureBounds.intersects(pipe->geometry())) {
             speed *= -1;  // Reverse direction
             return;
         }
     }
 
+    // Move to next position if no collision
     move(nextX, y());
 
-    // Stop or reset when off-screen
-    if (x() + width() < 0 || x() > parentWidget()->width()) {
-        moveTimer->stop();
-    }
+
 }
 
 
