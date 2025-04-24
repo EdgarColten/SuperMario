@@ -14,20 +14,23 @@
         <file>stompedKoopa.png</file>
         <file>castle.png</file>
         <file>flag.png</file>
+        <file>marioWalking.gif</file>
+        <file>marioOG.png</file>
+        <file>titleBG1.png</file>
+        <file>marioLogo.png</file>
         <file>exitBut.jpg</file>
         <file>exitBut1.jpg</file>
-        <file>marioLogo.png</file>
-        <file>marioOG.png</file>
-        <file>marioWalking.gif</file>
         <file>startBut.png</file>
         <file>startBut1.jpg</file>
-        <file>titleBG1.png</file>
-        <file>marioLeftOG.png</file>
-        <file>marioWalkingLeft.gif</file>
-        <file>bigMarioWalking.gif</file>
-        <file>bigMarioWalkingLeft.gif</file>
-        <file>bigMarioLeft.png</file>
+        <file>background.png</file>
+        <file>background1.jpg</file>
+        <file>marioBG.png</file>
         <file>bigMario.gif</file>
         <file>bigMarioLeft.gif</file>
+        <file>bigMarioLeft.png</file>
+        <file>bigMarioWalking.gif</file>
+        <file>bigMarioWalkingLeft.gif</file>
+        <file>marioLeftOG.png</file>
+        <file>marioWalkingLeft.gif</file>
     </qresource>
 </RCC>

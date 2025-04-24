@@ -30,15 +30,36 @@ Goomba::Goomba(const QString &goombaImagePath, QWidget *parent)
 
 void Goomba::moveLeft()
 {
-    // Move left by speed
-    move(x() - speed, y());
+    int nextX = x() - speed;
 
-    // Stop or reset when off-screen
-    if (x() + width() < 0) {
-        // move(parentWidget()->width(), y()); // reset to right side
-        moveTimer->stop();
+    // Predict future geometry after moving
+    QRect futureBounds = this->geometry();
+    futureBounds.moveLeft(nextX); // Shift entire bounding box to predicted x position
+
+    // Check for pipe collision
+    for (Pipe *pipe : pipes) {
+        if (futureBounds.intersects(pipe->geometry())) {
+            speed *= -1;  // Reverse direction
+            return;
+        }
     }
+    for (Block *block : blocks) {
+        if (futureBounds.intersects(block->geometry())) {
+            speed *= -1;  // Reverse direction
+            return;
+        }
+    }
+
+    // Move to next position if no collision
+    move(nextX, y());
+
+
 }
+
+
+
+
+
 
 void Goomba::stomp() {
     if(stomped) {
@@ -68,4 +89,12 @@ void Goomba::stomp() {
 
 bool Goomba::isStomped() const {
     return stomped;
+}
+
+void Goomba::setPipes(const QList<Pipe*> &pipeList) {
+    pipes = pipeList;
+}
+
+void Goomba::setBlocks(const QList<Block*> &blockList) {
+    blocks = blockList;
 }

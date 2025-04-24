@@ -6,10 +6,18 @@
 Character::Character(QWidget *parent)
     : QLabel(parent), verticalVelocity(0), horizontalSpeed(10), onGround(false)
 {
-    // setPixmap(QPixmap(":/images/marioOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+ //   setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setFixedSize(40, 40);
     setFocusPolicy(Qt::StrongFocus);
 
+/*    movementTimer = new QTimer(this);
+    connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
+    movementTimer->start(30);
+
+    invincibilityTimer = new QTimer(this);
+    connect(invincibilityTimer, &QTimer::timeout, this, &Character::endInvincibility);
+    stage =1;
+*/
     stillPixmapRight = QPixmap(":/images/marioOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     stillPixmapLeft = QPixmap(":/images/marioLeftOG.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -25,7 +33,6 @@ Character::Character(QWidget *parent)
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Character::updateMovement);
     movementTimer->start(30);
-
 }
 
 void Character::setBlocks(const QList<Block*> &blocks) { blockList = blocks; }
@@ -35,6 +42,8 @@ void Character::setKoopas(const QList<Koopa*>& kList) { koopaList = kList; }
 void Character::setPipes(const QList<Pipe*>& pList) { pipeList = pList; }
 void Character::setFlag(const QList<Flag*> &f) { flagList = f; }
 void Character::setCastle(QLabel *c){ castle = c; }
+void Character::setBackground(QLabel* bg){background = bg;}
+
 void Character::freeze() { frozen = true; }
 void Character::unfreeze() { frozen = false; }
 
@@ -43,7 +52,12 @@ void Character::keyPressEvent(QKeyEvent *event)
     if (frozen) return;
 
     keysPressed.insert(event->key());
-
+/*
+    if (event->key() == Qt::Key_Space && onGround)
+    {
+        verticalVelocity = -20;
+        onGround = false;
+    }*/
     if (event->key() == Qt::Key_Right && currentDirection != RIGHT)
     {
         setMovie(walkRightMovie);
@@ -67,6 +81,7 @@ void Character::keyPressEvent(QKeyEvent *event)
 
 void Character::keyReleaseEvent(QKeyEvent *event)
 {
+   // keysPressed.remove(event->key());
     keysPressed.remove(event->key());
 
     if ((event->key() == Qt::Key_Right && currentDirection == RIGHT) ||
@@ -102,6 +117,8 @@ void Character::updateMovement()
         for (Pipe *pipe : pipeList) pipe->move(pipe->x() - dx, pipe->y());
         for (Flag *flag : flagList) flag->move(flag->x() - dx, flag->y());
         castle->move(castle->x() - dx, castle->y());
+        if (background)
+            background->move(background->x() - dx, background->y());
     } else if (dx < 0 && x() <= 0) {
         // Prevent moving off the screen left
     } else {
@@ -131,6 +148,82 @@ void Character::updateMovement()
                 move(pipe->x() + pipe->width(), y());
         }
     }
+
+    // Horizontal collisions with Koopas (damage handling)
+    for (int i = 0; i < koopaList.size(); ++i)
+    {
+        Koopa* k = koopaList[i];
+        if (k->isStomped()) continue;
+
+        if (geometry().intersects(k->geometry()))
+        {
+            if (marioHitsKoopaFront(k))
+            {
+                if (invincible) continue; // Skip if Mario is invincible
+
+                // If Mario is not invincible and collides with a Koopa:
+                if (stage == 2)
+                {
+                    // Stage 2: Mario shrinks when hit
+
+                    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    setFixedSize(40, 40);
+                    move(x(), y() + 20); // Adjust Mario's position after shrinking
+                    stage = 1; // Mario becomes small
+                    qDebug() << "Current Mario stage:" << stage;
+
+                }
+                else
+                {
+
+                // Make END GAME LOGIC
+                    qDebug() << "Current Mario stage:" << stage;
+
+
+                }
+
+                makeInvincible();
+                break; // Exit the loop as we already handled the collision
+            }
+        }
+    }
+
+    // Horizontal collisions with Goombas (damage handling)
+    for (int i = 0; i < goombaList.size(); ++i)
+    {
+        Goomba* g = goombaList[i];
+        if (g->isStomped()) continue;
+
+        if (geometry().intersects(g->geometry()))
+        {
+            if (marioHitsGoombaFront(g))
+            {
+                if (invincible) continue; // Skip if Mario is invincible
+
+                // If Mario is not invincible and collides with a Goomba:
+                if (stage == 2)
+                {
+                    setPixmap(QPixmap(":/images/mario.png").scaled(40, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    setFixedSize(40, 40);
+                    move(x(), y() + 20); // Adjust Mario's position after shrinking
+                    stage = 1; // Mario becomes small
+                    qDebug() << "Current Mario stage:" << stage;
+
+
+                }
+                else
+                {
+                    // Make END GAME LOGIC
+                    qDebug() << "Current Mario stage:" << stage;
+                    //emit gameOver();
+                }
+
+                makeInvincible();
+                break; // Exit the loop as we already handled the collision
+            }
+        }
+    }
+
 
         
 
@@ -191,6 +284,15 @@ void Character::updateMovement()
     for (int i = 0; i < mushroomList.size(); ++i) {
         Mushroom* m = mushroomList[i];
         if (marioHitsMushroom(m)) {
+            /*
+            setPixmap(QPixmap(":/images/mario.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            setFixedSize(60, 60);
+            move(x(), y() - 20);
+            m->deleteLater();
+            mushroomList.removeAt(i);
+            stage =2;
+            continue;
+            */
             stillPixmapRight = QPixmap(":/images/bigMario.gif").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             stillPixmapLeft = QPixmap(":/images/bigMarioLeft.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -256,6 +358,7 @@ bool Character::marioHitsMushroom(Mushroom *m)
     QRect marioRect = this->geometry();
     QRect mushRect = m->geometry();
     return marioRect.intersects(mushRect);
+
 }
 
 
@@ -282,4 +385,38 @@ bool Character::marioBottomTouchesKoopaTop(Koopa *k)
            marioRect.bottom() <= koopaRect.top() + 10 &&
            marioRect.right() > koopaRect.left() &&
            marioRect.left() < koopaRect.right();
+}
+bool Character::marioHitsGoombaFront(Goomba *g)
+{
+    QRect marioRect = this->geometry();
+    QRect goombaRect = g->geometry();
+
+    return marioRect.right() >= goombaRect.left() &&
+           marioRect.left() <= goombaRect.right() &&
+           marioRect.bottom() > goombaRect.top() + 10 &&
+           marioRect.top() < goombaRect.bottom() - 10;
+}
+
+bool Character::marioHitsKoopaFront(Koopa *k)
+{
+    QRect marioRect = this->geometry();
+    QRect koopaRect = k->geometry();
+
+    return marioRect.right() >= koopaRect.left() &&
+           marioRect.left() <= koopaRect.right() &&
+           marioRect.bottom() > koopaRect.top() + 10 &&
+           marioRect.top() < koopaRect.bottom() - 10;
+}
+
+void Character::makeInvincible()
+{
+    if (!invincible) {
+        invincible = true;  // Set invincible flag to true
+        invincibilityTimer->start(3000); // Set invincibility for 3 seconds
+    }
+}
+
+void Character::endInvincibility()
+{
+    invincible = false;  // Set invincible flag to false after the timer ends
 }

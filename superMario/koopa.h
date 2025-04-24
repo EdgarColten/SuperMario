@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QMovie>
 #include <QTimer>
+#include "pipe.h"
+#include "block.h"
 
 class Character;
 
@@ -19,6 +21,9 @@ public:
     void stomp();
     bool isStomped() const;
     bool isSliding() const;
+    void setPipes(const QList<Pipe*>& pipeList);
+    void setBlocks(const QList<Block*>& blockList);
+
 
 private:
     QLabel *label;
@@ -27,6 +32,8 @@ private:
     int speed;
     bool stomped;
     bool sliding;
+    QList<Pipe*> pipes;
+    QList<Block*> blocks;
 };
 
 #endif // KOOPA_H
