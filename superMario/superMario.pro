@@ -15,7 +15,9 @@ SOURCES += \
     goomba.cpp \
     itemBlock.cpp \
     koopa.cpp \
+    levelSelect.cpp \
     main.cpp \
+    mainMenu.cpp \
     mainwindow.cpp \
     mushroom.cpp \
     pipe.cpp
@@ -27,6 +29,8 @@ HEADERS += \
     goomba.h \
     itemBlock.h \
     koopa.h \
+    levelSelect.h \
+    mainMenu.h \
     mainwindow.h \
     mushroom.h \
     pipe.h
